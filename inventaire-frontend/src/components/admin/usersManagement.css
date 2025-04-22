@@ -1,0 +1,388 @@
+/* Variables de couleur - Même thème que login.css */
+:root {
+  --bg-dark: #121212;
+  --bg-card: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --purple-primary: #8b5cf6;
+  --purple-light: #a78bfa;
+  --purple-dark: #6d28d9;
+  --orange-primary: #f97316;
+  --orange-light: #fb923c;
+  --orange-dark: #c2410c;
+  --error: #ef4444;
+  --input-bg: #2d2d2d;
+  --border-color: #3d3d3d;
+  --success: #10b981;
+  --warning: #f59e0b;
+}
+
+/* Conteneur principal */
+.users-management-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-dark);
+}
+
+/* Titre */
+.users-management-container h1 {
+  color: var(--text-primary);
+  margin-bottom: 30px;
+  font-size: 28px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+/* Conteneur des contrôles (recherche et limite) */
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Barre de recherche */
+.search-container {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--purple-primary);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+}
+
+.clear-search-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Sélecteur de limite */
+.limit-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.limit-selector label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.limit-selector select {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.limit-selector select:focus {
+  outline: none;
+  border-color: var(--purple-primary);
+}
+
+/* Message d'erreur */
+.error-message {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--error);
+}
+
+/* Spinner de chargement */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.spinner {
+  border: 4px solid rgba(139, 92, 246, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid var(--purple-primary);
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Message aucun résultat */
+.no-results {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+}
+
+/* Conteneur de tableau */
+.table-container {
+  overflow-x: auto;
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Tableau des utilisateurs */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.users-table th {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: left;
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+ 
+}
+#action {
+  text-align: center;          /* centrer horizontalement */
+  vertical-align: middle; 
+}
+
+
+.users-table td {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+.users-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Badges de rôle */
+.role-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.role-admin {
+  background-color: rgba(139, 92, 246, 0.2);
+  color: var(--purple-light);
+}
+
+.role-responsable {
+ /* Couleur orange similaire à admin */
+  background-color:  #5e3a217c;
+  color: rgb(226, 144, 89);
+}
+
+
+
+/* Boutons d'action - Symétrique */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center; /* Centré pour la symétrie */
+}
+
+.edit-button, .delete-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px; /* Largeur fixe pour la symétrie */
+  text-align: center;
+}
+
+.edit-button {
+  background: linear-gradient(to right, var(--purple-dark), var(--purple-primary));
+  color: white;
+}
+
+.edit-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.delete-button {
+  background: linear-gradient(to right, var(--orange-dark), var(--orange-primary));
+  color: white;
+}
+
+.delete-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Style pour le bouton Ajouter Utilisateur */
+.add-user-button {
+  background: linear-gradient(to right, var(--success), var(--success));
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  min-width: 100px;
+  text-align: center;
+}
+
+.add-user-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination-button {
+  padding: 8px 15px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: var(--purple-dark);
+  border-color: var(--purple-dark);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 5px;
+}
+
+.page-number {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-number:hover {
+  background-color: rgba(139, 92, 246, 0.2);
+}
+
+.page-number.active {
+  background: linear-gradient(to right, var(--purple-primary), var(--orange-primary));
+  color: white;
+  border-color: transparent;
+}
+
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-container {
+    position: relative;
+    flex: 1;
+    max-width: 500px;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 40px 10px 35px; /* Ajuster le padding pour l'icône */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+  }
+  
+  .users-table th, .users-table td {
+    padding: 10px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .edit-button, .delete-button {
+    width: 100%;
+  }
+}
