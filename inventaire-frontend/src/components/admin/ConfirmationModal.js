@@ -1,61 +1,41 @@
-import React, { useEffect } from 'react';
-import './confirmationModal.css';
+
+
+import "./edit-user-modal.css"
 
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
-  // Empêcher le défilement du body quand le modal est ouvert
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    // Nettoyage lors du démontage
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-  
-  // Gérer la touche Escape pour fermer le modal
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    
-    if (isOpen) {
-      window.addEventListener('keydown', handleEscape);
-    }
-    
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, onClose]);
-  
-  if (!isOpen) return null;
-  
+  if (!isOpen) return null
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
+      <div className="edit-user-modal">
         <div className="modal-header">
-          <h2>{title}</h2>
-          <button className="close-button" onClick={onClose}>×</button>
+          <h2>{title || "Confirmation"}</h2>
+          <button className="close-button" onClick={onClose}>
+            ×
+          </button>
         </div>
-        <div className="modal-body">
+
+        <div className="edit-user-form">
           <p>{message}</p>
         </div>
-        <div className="modal-footer">
-          <button className="cancel-button" onClick={onClose}>
+
+        <div className="modal-actions">
+          <button type="button" className="cancel-button" onClick={onClose}>
             Annuler
           </button>
-          <button className="confirm-button" onClick={onConfirm}>
+          <button type="button" className="submit-button" onClick={onConfirm}>
             Confirmer
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ConfirmationModal;
+export default ConfirmationModal
+
