@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import Login from './components/login/login'; 
-import UsersManagement from './components/admin/usersManagement';
+import Dashboard from './components/admin/dashboard'; 
 
 // Composant pour les routes protégées (à utiliser plus tard)
 const ProtectedRoute = ({ element, requiredRole }) => {
@@ -34,10 +34,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           {/* Placeholder pour les futures routes */}
           <Route 
-            path="/admin/usersManagement" 
+            path="/admin/Dashboard" 
             element={
               <ProtectedRoute 
-                element={<UsersManagement/>} 
+                element={<Dashboard/>} 
                 requiredRole="admin" 
               />
             } 

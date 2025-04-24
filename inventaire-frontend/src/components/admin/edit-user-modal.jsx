@@ -12,6 +12,8 @@ const EditUserModal = ({ isOpen, onClose, user, onUserUpdated }) => {
     role: "",
     password: "", // Champ vide par défaut
   })
+  const currentUser = JSON.parse(localStorage.getItem("user")) // ou via ton context d’auth s’il existe
+  const isEditingSelf = currentUser?.id === user?.id
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -39,29 +41,42 @@ const EditUserModal = ({ isOpen, onClose, user, onUserUpdated }) => {
 
   // Soumettre le formulaire
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
+    e.preventDefault();
+  
+    // Vérification que l'utilisateur est valide
     if (!user || !user.id) {
-      setError("Données utilisateur invalides")
-      return
+      setError("Données utilisateur invalides");
+      return;
     }
-
+  
     try {
-      setIsLoading(true)
-      setError(null)
-
+      setIsLoading(true);
+      setError(null);
+  
       // Préparer les données à envoyer
-      const dataToSend = {
-        name: formData.name,
-        email: formData.email,
-        role: formData.role,
+      const dataToSend = {};
+  
+      // On ajoute uniquement les champs modifiés
+      if (formData.name.trim() !== user.name) {
+        dataToSend.name = formData.name;
       }
-
-      // N'inclure le mot de passe que s'il a été modifié
+      if (formData.email.trim() !== user.email) {
+        dataToSend.email = formData.email;
+      }
+      if (formData.role.trim() !== user.role && formData.role.trim() !== "") {
+        dataToSend.role = formData.role;
+      }
       if (formData.password.trim() !== "") {
-        dataToSend.password = formData.password
+        dataToSend.password = formData.password;
       }
-
+  
+      // Si aucune donnée à envoyer, afficher un message
+      if (Object.keys(dataToSend).length === 0) {
+        setError("Aucune donnée n'a été modifiée.");
+        return;
+      }
+  
+      // Effectuer la requête PUT pour mettre à jour l'utilisateur
       const response = await fetch(`${API_URL}/api/users/${user.id}`, {
         method: "PUT",
         headers: {
@@ -69,26 +84,28 @@ const EditUserModal = ({ isOpen, onClose, user, onUserUpdated }) => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(dataToSend),
-      })
-
+      });
+  
       if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`)
+        throw new Error(`Erreur HTTP: ${response.status}`);
       }
-
-      await response.json()
-
+  
+      // Retourner la réponse
+      const updatedUser = await response.json();
+  
       // Informer le composant parent que l'utilisateur a été mis à jour
-      onUserUpdated()
-
+      onUserUpdated(updatedUser);
+  
       // Fermer le modal
-      onClose()
+      onClose();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour de l'utilisateur:", error)
-      setError("Erreur lors de la mise à jour de l'utilisateur. Veuillez réessayer.")
+      console.error("Erreur lors de la mise à jour de l'utilisateur:", error);
+      setError("Erreur lors de la mise à jour de l'utilisateur. Veuillez réessayer.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+  
 
   // Si le modal n'est pas ouvert, ne rien afficher
   if (!isOpen) return null
@@ -122,15 +139,28 @@ const EditUserModal = ({ isOpen, onClose, user, onUserUpdated }) => {
             <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="role">Rôle</label>
-            <select id="role" name="role" value={formData.role} onChange={handleChange} required>
-              <option value="">Sélectionner un rôle</option>
-              <option value="Admin">Admin</option>
-              <option value="Responsable">Responsable</option>
-         
-            </select>
-          </div>
+        <div className="form-group">
+  <label htmlFor="role">Rôle</label>
+  <select
+    id="role"
+    name="role"
+    value={formData.role}
+    onChange={handleChange}
+    required
+    disabled={user && JSON.parse(localStorage.getItem("user"))?.id === user.id}
+  >
+    <option value="">Sélectionner un rôle</option>
+    <option value="Admin">Admin</option>
+    <option value="Responsable">Responsable</option>
+  </select>
+  
+  {user && JSON.parse(localStorage.getItem("user"))?.id === user.id && (
+    <small className="info-text" style={{ color: "orange", fontSize: "0.9em" }}>
+      Vous ne pouvez pas modifier votre propre rôle.
+    </small>
+  )}
+</div>
+
 
           <div className="form-group">
             <label htmlFor="password">

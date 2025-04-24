@@ -5,6 +5,7 @@ import ConfirmationModal from "./ConfirmationModal"
 import EditUserModal from "./edit-user-modal"
 import AddUserModal from "./add-user-modal"
 import "./usersManagement.css"
+import { Pencil, Trash2, Plus, X } from "lucide-react"
 
 // URL de l'API sans pagination pour le moment
 const API_URL = "http://localhost:8000"
@@ -180,7 +181,7 @@ const UsersManagement = () => {
       setUserToDelete(null)
 
       // Afficher un message de succès
-      alert(result.message || "Utilisateur supprimé avec succès")
+      
     } catch (error) {
       console.error("Erreur lors de la suppression de l'utilisateur :", error)
       alert("Erreur lors de la suppression de l'utilisateur. Veuillez réessayer.")
@@ -213,9 +214,10 @@ const UsersManagement = () => {
 
       {/* Bouton Ajouter Utilisateur */}
       <div className="add-user-container" style={{ marginBottom: "20px" }}>
-        <button className="add-user-button" onClick={handleAddUser}>
-          ➕ Ajouter un Utilisateur
-        </button>
+      <button className="add-user-button" onClick={handleAddUser}>
+  <Plus size={16} style={{ marginRight: "5px" }} />
+  Ajouter un Utilisateur
+</button>
       </div>
 
       {/* Tableau des utilisateurs */}
@@ -253,13 +255,16 @@ const UsersManagement = () => {
                       </td>
                       <td className="action-buttons">
                         
-                        <button className="edit-button" onClick={() => handleEdit(user)}>
-                          ✏️ Éditer
-                        </button>
+                      <button className="edit-button" onClick={() => handleEdit(user)}>
+  <Pencil size={16} style={{ marginRight: "5px" }} />
+  Éditer
+</button>
                         {user.id !== currentUserId ? (
-                          <button className="delete-button" onClick={() => confirmDelete(user)}>
-                            🗑️ Supprimer
-                          </button>
+                         <button className="delete-button" onClick={() => confirmDelete(user)}>
+                         <Trash2 size={16} style={{ marginRight: "5px" }} />
+                         Supprimer
+                       </button>
+                       
                         ) : (
                         <div></div>
                         )}

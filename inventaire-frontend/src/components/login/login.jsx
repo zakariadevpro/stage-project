@@ -53,11 +53,10 @@ function Login() {
       });
 
       // Afficher un message de succès
-      alert("Connexion réussie");
-
+   
       // Rediriger en fonction du rôle
       if (response.data.user.role === "admin") {
-        navigate("/admin/usersManagement");
+        navigate("/admin/Dashboard");
       } else {
         navigate("/responsable/dashboard");
       }
