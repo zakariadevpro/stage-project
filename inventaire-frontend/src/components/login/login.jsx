@@ -134,7 +134,7 @@ function Login() {
             </div>
 
             <div className="forgotPassword">
-              <a href="forgot-password.html">Mot de passe oublié?</a>
+              <a href="/contacter-admin">Si vous rencontrez un problème, contactez l'administrateur.</a>
             </div>
           </form>
 

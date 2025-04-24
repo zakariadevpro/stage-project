@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/password-request', [PasswordRequestController::class, 'store']);
-Route::get('/admin/password-requests', [PasswordRequestController::class, 'index']); // Pour dashboard admin
+Route::get('/admin/password-requests', [PasswordRequestController::class, 'index']);
+Route::delete('/admin/password-requests/{id}', [PasswordRequestController::class, 'destroy']);
+ // Pour dashboard admin
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import UsersManagement from "./usersManagement";
 import "./dashboard.css";
+import ContactRequests from "./ContactRequests";
 
 const Dashboard = () => {
   const [activePage, setActivePage] = useState("home");
@@ -32,6 +33,12 @@ const Dashboard = () => {
         >
           Gestion des utilisateurs
         </button>
+        <button
+          className={activePage === "contact" ? "active" : ""}
+          onClick={() => setActivePage("contact")}
+        >
+          Messages reçus
+        </button>
       </aside>
 
       {/* Main Content */}
@@ -48,6 +55,7 @@ const Dashboard = () => {
           </div>
         )}
         {activePage === "users" && <UsersManagement />}
+        {activePage === "contact" && <ContactRequests />}
       </main>
     </div>
   );

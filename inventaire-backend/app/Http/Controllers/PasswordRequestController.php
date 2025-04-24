@@ -23,5 +23,20 @@ class PasswordRequestController extends Controller
     {
         return response()->json(PasswordRequest::latest()->get());
     }
+    public function destroy($id)
+    {
+        try {
+            // Trouver la demande avec l'ID donné
+            $request = PasswordRequest::findOrFail($id);
+
+            // Supprimer la demande
+            $request->delete();
+
+            // Retourner une réponse de succès
+            return response()->json(['message' => 'Demande supprimée avec succès'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Erreur lors de la suppression de la demande'], 500);
+        }
+    }
 }
 
