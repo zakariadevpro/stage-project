@@ -1,16 +1,34 @@
 <?php
+
 use App\Http\Controllers\PasswordRequestController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;   
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\PcController;
+
+Route::middleware('auth:sanctum')->get('/pcs-by-branche/{name}', [PcController::class, 'getPcsByBranche']);
+
+
+Route::middleware('auth:sanctum')->get('/branches', [BranchController::class, 'index']);
+// routes/api.php
+
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('/admin/password-requests/delete-all', [PasswordRequestController::class, 'deleteAll']);
+});
+
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/password-request', [PasswordRequestController::class, 'store']);
 Route::get('/admin/password-requests', [PasswordRequestController::class, 'index']);
 Route::delete('/admin/password-requests/{id}', [PasswordRequestController::class, 'destroy']);
- // Pour dashboard admin
+// Pour dashboard admin
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

@@ -4,6 +4,8 @@ import { store } from "./redux/store";
 import Login from './components/login/login';   
 import Dashboard from './components/admin/dashboard'; 
 import ContacterAdmin from './components/admin/ContacterAdmin';
+import DashboardUser from "./components/responsable/DashboardUser";
+import BranchInventory  from "./components/responsable/BranchInventory";
 
 // Composant pour les routes protégées (à utiliser plus tard)
 const ProtectedRoute = ({ element, requiredRole }) => {
@@ -49,11 +51,22 @@ function App() {
             path="/responsable/dashboard" 
             element={
               <ProtectedRoute 
-                element={<div>Tableau de bord Responsable</div>} 
+                element={<DashboardUser/>} 
+                
                 requiredRole="responsable" 
               />
             } 
+            
           />
+          <Route 
+           path="/responsable/branch/:name" 
+            element={
+             <ProtectedRoute 
+               element={<BranchInventory />} 
+               requiredRole="responsable" 
+    />
+  }
+/>
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </Router>

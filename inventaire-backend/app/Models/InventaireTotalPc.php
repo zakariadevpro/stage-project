@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class InventaireTotalPc extends Model
 {
     use HasFactory;
-    
-    // Spécifier le nom de la table existante
-    protected $table = 'inventaire_total_pcs';
-    
-    // Spécifier les colonnes qui peuvent être remplies
+
+    protected $table = 'inventaire_total_pcs'; // le nom exact de ta table
+
     protected $fillable = [
         'nom_poste',
         'num_serie',
@@ -23,11 +21,8 @@ class InventaireTotalPc extends Model
         'date_aff',
         'etat',
         'remarque',
-        'branches'
+        'branches', // ATTENTION: c'est 'branches' avec un S
     ];
-    
-    // Convertir certaines colonnes en types spécifiques
-    protected $casts = [
-        'date_aff' => 'date',
-    ];
-}   
+
+    public $timestamps = false; // car tu n'as pas created_at ni updated_at dans ta table
+}

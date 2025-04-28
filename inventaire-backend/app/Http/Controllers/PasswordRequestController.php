@@ -38,5 +38,15 @@ class PasswordRequestController extends Controller
             return response()->json(['message' => 'Erreur lors de la suppression de la demande'], 500);
         }
     }
+    public function deleteAll()
+{
+    try {
+        \App\Models\PasswordRequest::truncate(); // Vide toute la table
+        return response()->json(['message' => 'Toutes les demandes ont été supprimées.'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Erreur lors de la suppression.', 'error' => $e->getMessage()], 500);
+    }
+}
+
 }
 
