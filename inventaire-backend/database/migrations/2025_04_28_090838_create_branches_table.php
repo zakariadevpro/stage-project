@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('location')->nullable(); // optionnel
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }
