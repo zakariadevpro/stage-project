@@ -1,85 +1,263 @@
-/* src/components/contacterAdmin.css */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #6d28d9, #c2410c);
-    color: #fff;
-    min-height: 100vh;
-  }
+:root {
+  --primary: #2c2051;
+  --secondary: #ff5c35;
+  --white: #ffffff;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --error: #ef4444;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.input-container textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  resize: vertical;
+}
+
+.input-container textarea:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(224, 195, 187, 0.1);
+}
+
+
+/* Header */
+.login-header {
+  background-color: var(--white);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo {
+  height: 3.5rem;
+  width: auto;
+}
+
+.service-logo {
+  height: 3rem;
+  width: auto;
+}
+
+/* Main Content */
+.login-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.login-box {
+  background-color: var(--white);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 3px 4px 1px 0 rgba(255, 92, 53, 0.5);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.main-logo {
+  width: 80px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.login-logo h1 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  position: relative;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+  outline: none;
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(255, 92, 53, 0.1);
+}
+
+.input-error {
+  border-color: var(--error) !important;
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.login-button {
+  background-color: var(--secondary);
+  color: var(--white);
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 3px 4px 1px 0 rgba(44, 32, 81, 0.5);
+}
+
+.login-button:hover {
+  background-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.help-text {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.help-text a {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.help-text a:hover {
+  color: var(--secondary);
+}
+
+/* Footer */
+.login-footer {
+  background-color: var(--secondary);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: opacity 0.3s ease;
+}
+
+.social-link:hover {
+  opacity: 0.8;
+}
+
+.social-link.facebook {
+  background-image: url("https://www.m-automotiv.ma/assets/img/packimg/social/facebook.svg");
+}
+
+.social-link.linkedin {
+  background-image: url("https://www.m-automotiv.ma/assets/img/packimg/social/linkedin.svg");
+}
+
+.social-link.youtube {
+  background-image: url("https://www.m-automotiv.ma/assets/img/packimg/social/youtube.svg");
+}
+
+.social-link.instagram {
+  background-image: url("https://www.m-automotiv.ma/assets/img/packimg/social/instagram.svg");
+}
+
+.copyright {
+  font-size: 0.875rem;
+  color: white;
+  margin-left: 280px; 
   
-  .form-container {
-    background-color: #121212;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(255, 165, 0, 0.3);
-    max-width: 500px;
-    width: 100%;
-    margin: 50px auto;
+}
+
+.footer-logo {
+  height: 2.5rem;
+  width: auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
-  
-  h1 {
-    color: #ff9800;
-    font-size: 26px;
-    margin-bottom: 10px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-header {
+    padding: 1rem;
+  }
+
+  .header-logo {
+    height: 2.5rem;
+  }
+
+  .service-logo {
+    height: 2rem;
+  }
+
+  .login-box {
+    padding: 1.5rem;
+  }
+
+  .login-footer {
+    flex-direction: column;
+    gap: 1rem;
     text-align: center;
   }
-  
-  p {
-    color: #ccc;
-    margin-bottom: 25px;
-    font-size: 14px;
-    text-align: center;
+
+  .social-links {
+    justify-content: center;
   }
-  
-  label {
-    display: block;
-    margin-bottom: 8px;
-    color: #f1f1f1;
-  }
-  
-  input,
-  textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #3d3d3d;
-    border-radius: 8px;
-    background-color: #2d2d2d;
-    color: #ffffff;
-    font-size: 14px;
-  }
-  
-  input:focus,
-  textarea:focus {
-    outline: 2px solid #ff9800;
-  }
-  
-  .envoyer {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(90deg, #ff9800, #9c27b0);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .envoyer:hover {
-    opacity: 0.9;
-  }
-  
-  .back-link {
-    display: block;
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #ff9800;
-    text-decoration: none;
-  }
-  
-  .back-link:hover {
-    text-decoration: underline;
-  }
-  
+}

@@ -1,0 +1,31 @@
+<svg id="Calque_1" data-name="Calque 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 291.65 49.81">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ff5c35;
+      }
+
+      .cls-2, .cls-3 {
+        font-size: 18.54px;
+        fill: #2c2051;
+      }
+
+      .cls-2 {
+        font-family: Verdana;
+      }
+
+      .cls-3 {
+        font-family: Verdana-Bold, Verdana;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <g>
+    <g>
+      <path class="cls-1" d="M14,13.64h6.61l5,14.68h.06l4.72-14.68H37V35h-4.4V19.86h-.06L27.26,35H23.64L18.41,20h-.06V35H14Z"/>
+      <path class="cls-1" d="M0,0V49.81H49.81V0ZM48.62,48.62H.89V.89H48.62Z"/>
+    </g>
+    <text class="cls-2" transform="translate(55.47 21.49)">Distributeur </text>
+    <text class="cls-3" transform="translate(55.47 42.81)">Renault, Dacia, Alpine.</text>
+  </g>
+</svg>
