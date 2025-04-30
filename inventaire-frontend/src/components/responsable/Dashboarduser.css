@@ -132,6 +132,7 @@
   }
   
   .branch-card-light {
+    position: relative;
     background-color: var(--card-bg);
     border: 1px solid var(--border-light);
     border-radius: 0.75rem;
@@ -140,7 +141,6 @@
     cursor: pointer;
     overflow: hidden;
     padding: 0 !important;
-    position: relative;
   }
   
   .branch-card-light:hover {
@@ -175,6 +175,14 @@
     object-fit: cover;
    
     transition: transform 0.5s ease;
+  }
+  .branch-actions {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 10px;
+    z-index: 2;
   }
   
   .branch-card-light:hover .card-img {
@@ -215,11 +223,23 @@
     text-align: center;
     font-weight: 600;
     transition: all 0.3s ease;
+   
+  }
+  .search-bar-branch {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
   }
   
-  .branch-card-light:hover .titlepoint {
+  
+  .branch-card-light:hover .titlepoint:hover {
     background: linear-gradient(to top, rgba(var(--orange-primary), 0.9), rgba(0, 0, 0, 0));
     padding-bottom: 15px;
+  
   }
   
   .highlight-orange {
@@ -328,4 +348,72 @@
     border: none;
     border-radius: 5px;
   }
+  .branch-actions button {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border-light);
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .branch-actions button:hover {
+    background-color: var(--hover-light);
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  .branch-actions i {
+    font-size: 16px;
+    color: var(--purple-primary);
+  }s
   
+.branch-actions .delete-icon i {
+  color: var(--orange-primary);
+}
+@media (max-width: 768px) {
+  .branch-actions {
+    top: 8px;
+    left: 8px;
+    gap: 6px;
+  }  
+  .branch-actions button {
+    padding: 5px;
+  }
+
+  .branch-actions i {
+    font-size: 14px;
+  }
+}.card-image {
+  position: relative;
+}
+
+.card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.branch-action {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+
+.branch-action button {
+  background: white;
+  border: none;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.branch-action button:hover {
+  opacity: 0.9;
+}

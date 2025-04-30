@@ -2,12 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboarduser.css'; // style personnalisé
+import { Edit, Trash2 } from "lucide-react";
 
 const DashboardUser = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newBranch, setNewBranch] = useState({
     name: '',
-    address: '',
+    location: '',
     image: null,
   });
   const [activePage, setActivePage] = useState('home');
@@ -16,6 +17,9 @@ const DashboardUser = () => {
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
+  const [editBranch, setEditBranch] = useState(null); // branche à éditer
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -57,14 +61,72 @@ const DashboardUser = () => {
       setNewBranch({ ...newBranch, [name]: value });
     }
   };
-
+  const handleEditBranch = async (e, id) => {
+    e.preventDefault();
+  
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    if (editBranch.name) formData.append('name', editBranch.name);
+    if (editBranch.location) formData.append('location', editBranch.location);
+    if (editBranch.image instanceof File) formData.append('image', editBranch.image);
+  
+    try {
+      const response = await fetch(`http://localhost:8000/api/branches/${id}/update`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+        body: formData,
+      });
+  
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Erreur de mise à jour");
+  
+      alert("Branche modifiée avec succès");
+      // Mise à jour dans l'état local
+      const updatedBranches = branches.map(b => b.id === id ? data : b);
+      setBranches(updatedBranches);
+      setEditBranch(null);
+    } catch (err) {
+      console.error(err);
+      alert("Erreur : " + err.message);
+    }
+  };
+  
+  const handleDeleteBranch = async (id) => {
+    const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette branche ?");
+    if (!confirmDelete) return;
+  
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:8000/api/branches/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+  
+      if (!response.ok) throw new Error('Erreur lors de la suppression');
+  
+      setBranches(branches.filter(branch => branch.id !== id));
+      alert('Branche supprimée avec succès');
+    } catch (err) {
+      console.error(err);
+      alert('Erreur : ' + err.message);
+    }
+  };
+  
   const handleAddBranch = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('name', newBranch.name);
-    formData.append('address', newBranch.address);
-    formData.append('image', newBranch.image);
+    formData.append('location', newBranch.location);
+    if (newBranch.image) {
+      formData.append('image', newBranch.image);
+    }
   
     try {
       const response = await fetch('http://localhost:8000/api/branches', {
@@ -86,13 +148,16 @@ const DashboardUser = () => {
       alert('Branche ajoutée avec succès');
       setBranches([...branches, data]);
       setShowAddForm(false);
-      setNewBranch({ name: '', address: '', image: null });
+      setNewBranch({ name: '', location: '', image: null });
     } catch (err) {
       console.error('Erreur complète:', err);
       alert(err.message);
     }
   };
-  
+  const filteredBranches = branches.filter(branch =>
+    branch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    branch.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="dashboard-container-light">
       {/* Sidebar */}
@@ -140,19 +205,54 @@ const DashboardUser = () => {
               <p>Erreur : {error}</p>
             ) : (
               <div className="branch-list">
-                {branches.map((branch) => (
+                <input
+  type="text"
+  placeholder="Rechercher par nom ou adresse..."
+  className="search-bar-branch"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+/>
+                {filteredBranches.map((branch) => (
+                  <div>
                   <div
                     key={branch.id}
                     className="branch-card-light"
-                    onClick={() => navigate(`/responsable/branch/${branch.name}`)}
-                  >
-                    <div className="image-content">
-                      <div className="card-image">
-                        <img src={branch.image_path} alt={branch.name} className="card-img" />
-                        <h4 className="titlepoint">{branch.name}<br />RENAULT/DACIA/ALPINE</h4>
-                      </div>
+                    
+                  >               
+                    
+                    
+                    <div className="card-image">
+  <img src={branch.image_path} alt={branch.name} className="card-img"  onClick={() => navigate(`/responsable/branch/${branch.name}`)}/>
+  <div className="branch-action">
+    <button
+      onClick={() => handleDeleteBranch(branch.id)}
+      title="Supprimer"
+      className="delete-icon"
+    >
+      <Trash2 size={16} color="#f97316" />
+    </button>
+    <button
+      onClick={() => setEditBranch(branch)}
+      title="Modifier"
+      className="edit-icon"
+    >
+      <Edit size={16} color="#7c3aed" />
+    </button>
+  </div>
+  <h4
+    className="titlepoint"
+   
+  >
+    {branch.name}<br />RENAULT/DACIA/ALPINE
+  </h4>
+</div>
+
+                     
                     </div>
                   </div>
+
+
+                  
                 ))}
 
                 {/* Carte Ajouter une branche */}
@@ -182,9 +282,9 @@ const DashboardUser = () => {
               />
               <input
                 type="text"
-                name="address"
+                name="location"
                 placeholder="Adresse"
-                value={newBranch.address}
+                value={newBranch.location}
                 onChange={handleInputChange}
                 required
               />
@@ -193,7 +293,7 @@ const DashboardUser = () => {
                 name="image"
                 accept="image/*"
                 onChange={handleInputChange}
-                required
+                
               />
               <div className="form-buttons">
                 <button type="submit" className="btn-orange">Ajouter</button>
@@ -202,6 +302,38 @@ const DashboardUser = () => {
             </form>
           </div>
         )}
+        {editBranch && (
+  <div className="add-branch-form-overlay">
+    <form className="add-branch-form" onSubmit={(e) => handleEditBranch(e, editBranch.id)}>
+      <h2>Modifier la branche</h2>
+      <input
+        type="text"
+        name="name"
+        placeholder="Nom de la branche"
+        defaultValue={editBranch.name}
+        onChange={(e) => setEditBranch({ ...editBranch, name: e.target.value })}
+      />
+      <input
+        type="text"
+        name="location"
+        placeholder="Adresse"
+        defaultValue={editBranch.location}
+        onChange={(e) => setEditBranch({ ...editBranch, location: e.target.value })}
+      />
+      <input
+        type="file"
+        name="image"
+        accept="image/*"
+        onChange={(e) => setEditBranch({ ...editBranch, image: e.target.files[0] })}
+      />
+      <div className="form-buttons">
+        <button type="submit" className="btn-orange">Enregistrer</button>
+        <button type="button" className="btn-purple" onClick={() => setEditBranch(null)}>Annuler</button>
+      </div>
+    </form>
+  </div>
+)}
+
 
         {activePage === 'new' && (
           <div>

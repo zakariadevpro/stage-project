@@ -11,6 +11,8 @@ use App\Http\Controllers\PcController;
 Route::middleware('auth:sanctum')->get('/pcs-by-branche/{name}', [PcController::class, 'getPcsByBranche']);
 
 Route::middleware('auth:sanctum')->post('/branches', [BranchController::class, 'store']);
+Route::delete('/branches/{id}', [BranchController::class, 'destroy']);
+Route::post('/branches/{id}/update', [BranchController::class, 'update']);
 
 Route::middleware('auth:sanctum')->get('/branches', [BranchController::class, 'index']);
 // routes/api.php
