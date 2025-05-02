@@ -1,25 +1,21 @@
-// src/components/responsable/DashboardUser.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboarduser.css'; // style personnalisé
-import { Edit, Trash2 } from "lucide-react";
+import './Dashboarduser.css';
+import { Edit, Trash2, Home, Server, PlusSquare } from 'lucide-react';
+import logoright from "./assets/logoright.svg";
+import logoleft from "./assets/logoleft.svg";
 
 const DashboardUser = () => {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newBranch, setNewBranch] = useState({
-    name: '',
-    location: '',
-    image: null,
-  });
+  const [newBranch, setNewBranch] = useState({ name: '', location: '', image: null });
   const [activePage, setActivePage] = useState('home');
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [userName, setUserName] = useState('');
   const navigate = useNavigate();
-  const [editBranch, setEditBranch] = useState(null); // branche à éditer
+  const [editBranch, setEditBranch] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
 
   useEffect(() => {
     const userData = localStorage.getItem("user");
@@ -61,63 +57,7 @@ const DashboardUser = () => {
       setNewBranch({ ...newBranch, [name]: value });
     }
   };
-  const handleEditBranch = async (e, id) => {
-    e.preventDefault();
-  
-    const token = localStorage.getItem('token');
-    const formData = new FormData();
-    if (editBranch.name) formData.append('name', editBranch.name);
-    if (editBranch.location) formData.append('location', editBranch.location);
-    if (editBranch.image instanceof File) formData.append('image', editBranch.image);
-  
-    try {
-      const response = await fetch(`http://localhost:8000/api/branches/${id}/update`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-        body: formData,
-      });
-  
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Erreur de mise à jour");
-  
-      alert("Branche modifiée avec succès");
-      // Mise à jour dans l'état local
-      const updatedBranches = branches.map(b => b.id === id ? data : b);
-      setBranches(updatedBranches);
-      setEditBranch(null);
-    } catch (err) {
-      console.error(err);
-      alert("Erreur : " + err.message);
-    }
-  };
-  
-  const handleDeleteBranch = async (id) => {
-    const confirmDelete = window.confirm("Voulez-vous vraiment supprimer cette branche ?");
-    if (!confirmDelete) return;
-  
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:8000/api/branches/${id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-      });
-  
-      if (!response.ok) throw new Error('Erreur lors de la suppression');
-  
-      setBranches(branches.filter(branch => branch.id !== id));
-      alert('Branche supprimée avec succès');
-    } catch (err) {
-      console.error(err);
-      alert('Erreur : ' + err.message);
-    }
-  };
-  
+
   const handleAddBranch = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -127,7 +67,7 @@ const DashboardUser = () => {
     if (newBranch.image) {
       formData.append('image', newBranch.image);
     }
-  
+
     try {
       const response = await fetch('http://localhost:8000/api/branches', {
         method: 'POST',
@@ -137,212 +77,251 @@ const DashboardUser = () => {
         },
         body: formData,
       });
-  
-      const text = await response.text(); // lisons la réponse brute
-      console.log('Status:', response.status);
-      console.log('Réponse brute:', text); // POUR DEBUG
-  
+
       if (!response.ok) throw new Error('Erreur lors de l\'ajout de la branche');
-  
-      const data = JSON.parse(text); // si tu veux parser quand tout va bien
+
+      const data = await response.json();
       alert('Branche ajoutée avec succès');
       setBranches([...branches, data]);
       setShowAddForm(false);
       setNewBranch({ name: '', location: '', image: null });
     } catch (err) {
-      console.error('Erreur complète:', err);
       alert(err.message);
     }
   };
+
+  const handleDeleteBranch = async (id) => {
+    if (!window.confirm("Voulez-vous vraiment supprimer cette branche ?")) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:8000/api/branches/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) throw new Error('Erreur lors de la suppression');
+
+      setBranches(branches.filter(branch => branch.id !== id));
+      alert('Branche supprimée avec succès');
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleEditBranch = async (e, id) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    if (editBranch.name) formData.append('name', editBranch.name);
+    if (editBranch.location) formData.append('location', editBranch.location);
+    if (editBranch.image instanceof File) formData.append('image', editBranch.image);
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/branches/${id}/update`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Erreur de mise à jour");
+
+      alert("Branche modifiée avec succès");
+      setBranches(branches.map(b => b.id === id ? data : b));
+      setEditBranch(null);
+    } catch (err) {
+      alert("Erreur : " + err.message);
+    }
+  };
+
   const filteredBranches = branches.filter(branch =>
     branch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     branch.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
-    <div className="dashboard-container-light">
-      {/* Sidebar */}
-      <aside className="sidebar-light">
-        <h2>Utilisateur</h2>
-        <button
-          className={activePage === 'home' ? 'active' : ''}
-          onClick={() => setActivePage('home')}
-        >
-          Accueil
-        </button>
-        <button
-          className={activePage === 'inventory' ? 'active' : ''}
-          onClick={() => setActivePage('inventory')}
-        >
-          Inventaire PC
-        </button>
-        <button
-          className={activePage === 'new' ? 'active' : ''}
-          onClick={() => setActivePage('new')}
-        >
-          Nouveaux PC
-        </button>
-      </aside>
+    <>
+      <header className="login-header">
+        <img src={logoleft} alt="M-AUTOMOTIV" className="header-logo" />
+        <img src={logoright} alt="Service Client 2025" className="service-logo" />
+      </header>
 
-      {/* Main content */}
-      <main className="main-content-light">
-        {activePage === 'home' && (
-          <div>
-            <h1>Bienvenue </h1>
-            <p>
-              Bonjour <span className="highlight-orange">{userName}</span>,<br />
-              vous êtes dans votre espace utilisateur pour consulter l'inventaire de{" "}
-              <span className="highlight-purple">M.Automotiv</span>.
-            </p>
-          </div>
-        )}
+      <div className="dashboard-container-light">
+        {/* Sidebar */}
+        <aside className="sidebar-light">
+  <div className="sidebar-header">
+    <h2>Responsable IT inventory </h2>
+    <p className="sidebar-role">Responsable IT</p>
+  </div>
 
-        {activePage === 'inventory' && (
-          <div>
-            <h2>Branches Disponibles</h2>
-            {loading ? (
-              <p>Chargement...</p>
-            ) : error ? (
-              <p>Erreur : {error}</p>
-            ) : (
-              <div className="branch-list">
+  <nav className="sidebar-nav">
+    <button className={activePage === 'home' ? 'active' : ''} onClick={() => setActivePage('home')}>
+      <Home size={20} /> <span>Accueil</span>
+    </button>
+    <button className={activePage === 'inventory' ? 'active' : ''} onClick={() => setActivePage('inventory')}>
+      <Server size={20} /> <span>Inventaire PC</span>
+    </button>
+    <button className={activePage === 'new' ? 'active' : ''} onClick={() => setActivePage('new')}>
+      <PlusSquare size={20} /> <span>Nouveaux PC</span>
+    </button>
+  </nav>
+</aside>
+
+        {/* Main content */}
+        <main className="main-content-light">
+          {activePage === 'home' && (
+            <div>
+              <h1>Bienvenue</h1>
+              <p>
+                Bonjour <span className="highlight-orange">{userName}</span>,<br />
+                vous êtes dans votre espace responsable IT pour consulter l'inventaire de{" "}
+                <span className="highlight-purple">M.Automotiv</span>.
+              </p>
+            </div>
+          )}
+
+          {activePage === 'inventory' && (
+            <div>
+              <h2>Succursales</h2>
+
+              <div className="search-container">
                 <input
-  type="text"
-  placeholder="Rechercher par nom ou adresse..."
-  className="search-bar-branch"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-/>
-                {filteredBranches.map((branch) => (
-                  <div>
-                  <div
-                    key={branch.id}
-                    className="branch-card-light"
-                    
-                  >               
-                    
-                    
-                    <div className="card-image">
-  <img src={branch.image_path} alt={branch.name} className="card-img"  onClick={() => navigate(`/responsable/branch/${branch.name}`)}/>
-  <div className="branch-action">
-    <button
-      onClick={() => handleDeleteBranch(branch.id)}
-      title="Supprimer"
-      className="delete-icon"
-    >
-      <Trash2 size={16} color="#f97316" />
-    </button>
-    <button
-      onClick={() => setEditBranch(branch)}
-      title="Modifier"
-      className="edit-icon"
-    >
-      <Edit size={16} color="#7c3aed" />
-    </button>
-  </div>
-  <h4
-    className="titlepoint"
-   
-  >
-    {branch.name}<br />RENAULT/DACIA/ALPINE
-  </h4>
-</div>
+                  type="text"
+                  placeholder="Rechercher un Succursales ou une adresse..."
+                  className="search-bar-branch"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
 
-                     
+              {loading ? (
+                <p>Chargement...</p>
+              ) : error ? (
+                <p>Erreur : {error}</p>
+              ) : (
+                <div className="branch-list">
+                  {filteredBranches.map((branch) => (
+                    <div key={branch.id} className="branch-card-light">
+                      <div className="card-image">
+                        <img
+                          src={branch.image_path}
+                          alt={branch.name}
+                          className="card-img"
+                          onClick={() => navigate(`/responsable/branch/${branch.name}`)}
+                        />
+                        <div className="branch-action">
+                          <button onClick={() => handleDeleteBranch(branch.id)} title="Supprimer">
+                            <Trash2 size={16} color="#f97316" />
+                          </button>
+                          <button onClick={() => setEditBranch(branch)} title="Modifier">
+                            <Edit size={16} color="#7c3aed" />
+                          </button>
+                        </div>
+                        <h4  onClick={() => navigate(`/responsable/branch/${branch.name}`)} className="titlepoint">{branch.name}<br />RENAULT/DACIA/ALPINE</h4>
+                      </div>
                     </div>
+                  ))}
+
+                  <div className="branch-card-light add-branch-card" onClick={() => setShowAddForm(true)}>
+                    <div className="add-symbol">+</div>
+                    <h3>Ajouter un Succursales</h3>
                   </div>
-
-
-                  
-                ))}
-
-                {/* Carte Ajouter une branche */}
-                <div
-                  className="branch-card-light add-branch-card"
-                  onClick={() => setShowAddForm(true)}
-                >
-                  <div className="add-symbol">+</div>
-                  <h3>Ajouter une branche</h3>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
 
-        {showAddForm && (
-          <div className="add-branch-form-overlay">
-            <form className="add-branch-form" onSubmit={handleAddBranch}>
-              <h2>Ajouter une nouvelle branche</h2>
-              <input
-                type="text"
-                name="name"
-                placeholder="Nom de la branche"
-                value={newBranch.name}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="text"
-                name="location"
-                placeholder="Adresse"
-                value={newBranch.location}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleInputChange}
-                
-              />
-              <div className="form-buttons">
-                <button type="submit" className="btn-orange">Ajouter</button>
-                <button type="button" className="btn-purple" onClick={() => setShowAddForm(false)}>Annuler</button>
-              </div>
-            </form>
-          </div>
-        )}
-        {editBranch && (
-  <div className="add-branch-form-overlay">
-    <form className="add-branch-form" onSubmit={(e) => handleEditBranch(e, editBranch.id)}>
-      <h2>Modifier la branche</h2>
-      <input
-        type="text"
-        name="name"
-        placeholder="Nom de la branche"
-        defaultValue={editBranch.name}
-        onChange={(e) => setEditBranch({ ...editBranch, name: e.target.value })}
-      />
-      <input
-        type="text"
-        name="location"
-        placeholder="Adresse"
-        defaultValue={editBranch.location}
-        onChange={(e) => setEditBranch({ ...editBranch, location: e.target.value })}
-      />
-      <input
-        type="file"
-        name="image"
-        accept="image/*"
-        onChange={(e) => setEditBranch({ ...editBranch, image: e.target.files[0] })}
-      />
-      <div className="form-buttons">
-        <button type="submit" className="btn-orange">Enregistrer</button>
-        <button type="button" className="btn-purple" onClick={() => setEditBranch(null)}>Annuler</button>
+          {showAddForm && (
+            <div className="add-branch-form-overlay">
+              <form className="add-branch-form" onSubmit={handleAddBranch}>
+                <h2>Ajouter un Succursales</h2>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Nom de la branche"
+                  value={newBranch.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="location"
+                  placeholder="Adresse"
+                  value={newBranch.location}
+                  onChange={handleInputChange}
+                  required
+                />
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={handleInputChange}
+                />
+                <div className="form-buttons">
+                  <button type="submit" className="btn-orange">Ajouter</button>
+                  <button type="button" className="btn-purple" onClick={() => setShowAddForm(false)}>Annuler</button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {editBranch && (
+            <div className="add-branch-form-overlay">
+              <form className="add-branch-form" onSubmit={(e) => handleEditBranch(e, editBranch.id)}>
+                <h2>Modifier le Succursales</h2>
+                <input
+                  type="text"
+                  name="name"
+                  defaultValue={editBranch.name}
+                  onChange={(e) => setEditBranch({ ...editBranch, name: e.target.value })}
+                />
+                <input
+                  type="text"
+                  name="location"
+                  defaultValue={editBranch.location}
+                  onChange={(e) => setEditBranch({ ...editBranch, location: e.target.value })}
+                />
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  onChange={(e) => setEditBranch({ ...editBranch, image: e.target.files[0] })}
+                />
+                <div className="form-buttons">
+                  <button type="submit" className="btn-orange">Enregistrer</button>
+                  <button type="button" className="btn-purple" onClick={() => setEditBranch(null)}>Annuler</button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {activePage === 'new' && (
+            <div>
+              <h2>Page Nouveaux PC</h2>
+              <p>Cette page sera bientôt disponible...</p>
+            </div>
+          )}
+        </main>
       </div>
-    </form>
-  </div>
-)}
 
-
-        {activePage === 'new' && (
-          <div>
-            <h2>Page Nouveaux PC</h2>
-            <p>Cette page sera bientôt disponible...</p>
-          </div>
-        )}
-      </main>
-    </div>
+      <footer className="login-footer">
+        <div className="social-links">
+          <a href="https://web.facebook.com/M.Automotiv" target="_blank" rel="noopener noreferrer" className="social-link facebook"></a>
+          <a href="https://www.linkedin.com/company/m-automotiv" target="_blank" rel="noopener noreferrer" className="social-link linkedin"></a>
+          <a href="https://www.youtube.com/@mautomotiv" target="_blank" rel="noopener noreferrer" className="social-link youtube"></a>
+          <a href="https://www.instagram.com/m.automotiv.maroc" target="_blank" rel="noopener noreferrer" className="social-link instagram"></a>
+        </div>
+        <p className="copyright">© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
+        <img src="https://m-automotiv.ma/assets/img/packimg/logoleft.svg" alt="M-AUTOMOTIV" className="footer-logo" />
+      </footer>
+    </>
   );
 };
 

@@ -1,0 +1,180 @@
+
+const hamburger = document.querySelector('.header .nav-bar .nav-list .hamburger');
+const mobile_menu = document.querySelector('.header .nav-bar .nav-list ul.mobile');
+const logo_mobile = document.querySelector('.header  .logomobile');
+const menu_item = document.querySelectorAll('.header .nav-bar .nav-list ul li a');
+const headercontainer = document.querySelector('.header.container');
+const header=document.querySelector('#header');
+const headercontent=document.querySelector('#content');
+const modal = document.getElementById('myModal');
+
+const modalform = document.getElementById('myModalform');
+const btnform=document.querySelector(".buttoncontact")
+const spanform = document.querySelector(".close.form");
+
+
+// Get the button that opens the modal
+let btn = document.querySelector(".modalre");
+// Get the <span> element that closes the modal
+var span = document.querySelector(".close.rjt");
+document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 40) {
+            //document.getElementById('mainNav').classList.add('fixedtop');
+            // add padding top to show content behind navbar
+            //navbar_height = document.querySelector('.nav-bar').offsetHeight + 70;
+		   
+			headercontainer.style.position = 'fixed';
+			headercontainer.style.top = 0;
+			header.style.paddingTop = 65 + 'px';
+        } else {
+            //document.getElementById('mainNav').classList.remove('fixedtop');
+            // remove padding top from body
+           
+			headercontainer.style.position = 'relative';
+			header.style.paddingTop = '0';
+        }
+    });
+});
+
+hamburger.addEventListener('click', () => {
+	hamburger.classList.toggle('active');
+	mobile_menu.classList.toggle('active');
+    logo_mobile.classList.toggle('active');
+    btnm = document.querySelector(".modalrem");
+    btnm.addEventListener('click', () => {
+        modal.style.display = "flex";
+    });
+});
+
+
+
+// When the user clicks the button, open the modal 
+btn.addEventListener('click', () => {
+    modal.style.display = "flex";
+    
+});
+/*btnform.addEventListener('click', function (e)  {
+    modalform.style.display = "flex";
+   
+}); */
+
+// When the user clicks on <span> (x), close the modal
+span.addEventListener('click',()=> {
+    
+        modal.style.display = "none";
+    
+});
+
+spanform.addEventListener('click',()=> {
+    
+
+
+
+    modalform.style.display = "none";
+
+});
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+    if (event.target == modalform) {
+        modalform.style.display = "none";
+    }
+}
+
+
+
+
+
+var swiper2 = new Swiper(".pointvente.slide-content", {
+    slidesPerView: 3,
+    spaceBetween: 55,
+    loop: true,
+    centerSlide: 'true',
+    fade: 'true',
+   
+   
+    navigation: {
+      nextEl: ".swiper-button-next.point",
+      prevEl: ".swiper-button-prev.point",
+    },
+
+    breakpoints:{
+        0: {
+            slidesPerView: 1,
+        },
+        520: {
+            slidesPerView: 2,
+        },
+        950: {
+            slidesPerView: 3,
+        },
+    },
+  });
+var swiper = new Swiper(".activite.slide-content", {
+    slidesPerView: 3,
+    spaceBetween: 60,
+    loop: true,
+    centerSlide: 'true',
+    fade: 'true',
+    grabCursor: 'true',
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+      dynamicBullets: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next.value",
+      prevEl: ".swiper-button-prev.value",
+    },
+
+    breakpoints:{
+        0: {
+            slidesPerView: 1,
+        },
+        520: {
+            slidesPerView: 2,
+        },
+        950: {
+            slidesPerView: 3,
+        },
+    },
+  });
+  var swiper3 = new Swiper(".aboutuse.slide-content", {
+    slidesPerView: 2,
+    spaceBetween: 10,
+    loop: true,
+    centerSlide: 'true',
+    fade: 'true',
+    grabCursor: 'true',
+    navigation: {
+      nextEl: ".swiper-button-next.aboutusn",
+      prevEl: ".swiper-button-prev.aboutusp",
+    },
+
+    breakpoints:{
+        0: {
+            slidesPerView: 1,
+        },
+        520: {
+            slidesPerView: 2,
+        },
+       
+    },
+  });
+  var swiper = new Swiper(".mySwiper", {
+	  spaceBetween: 10, 
+	  loop: true,
+	  autoplay:true,
+	  autoplay: {
+		delay: 5000, 
+			},
+	  
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
+

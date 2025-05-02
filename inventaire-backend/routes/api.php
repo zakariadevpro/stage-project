@@ -7,6 +7,23 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\PcController;
+use App\Http\Controllers\DashboardController;
+
+
+
+
+Route::middleware('auth:sanctum')->get('/admin/stats', [DashboardController::class, 'stats']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/pcs-by-branche/{name}', [PcController::class, 'getPcsByBranche']);
+    Route::post('/pcs', [PcController::class, 'store']);         // Ajouter un PC
+    Route::put('/pcs/{id}', [PcController::class, 'update']);     // Modifier un PC
+    Route::delete('/pcs/{id}', [PcController::class, 'destroy']); // Supprimer un PC
+});
+
+
+
 
 Route::middleware('auth:sanctum')->get('/pcs-by-branche/{name}', [PcController::class, 'getPcsByBranche']);
 

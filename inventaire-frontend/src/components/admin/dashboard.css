@@ -1,92 +1,250 @@
+/* Variables */
 :root {
-    --bg-dark: #121212;
-    --bg-card: #1e1e1e;
-    --text-primary: #ffffff;
-    --text-secondary: #b3b3b3;
-    --purple-primary: #8b5cf6;
-    --purple-light: #a78bfa;
-    --purple-dark: #6d28d9;
-    --orange-primary: #f97316;
-    --orange-light: #fb923c;
-    --orange-dark: #c2410c;
-    --error: #ef4444;
-    --input-bg: #2d2d2d;
-    --border-color: #3d3d3d;
-  }
-  
-  /* Dashboard layout */
+  --primary: #2c2051;
+  --secondary: #ff5c35;
+  --white: #ffffff;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --error: #ef4444;
+}
+
+/* Dashboard layout */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--gray-100);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: var(--primary);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+  color:#ff5c35
+}
+
+.sidebar h2 {
+  color: var(--white);
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidebar button {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--white);
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  opacity: 0.8;
+}
+
+.sidebar button:hover {
+  background-color: rgba(255, 92, 53, 0.1);
+  opacity: 1;
+}
+
+.sidebar button.active {
+  background-color: var(--secondary);
+  opacity: 1;
+  box-shadow: 3px 4px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  background-color: var(--error);
+  color: var(--white);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.logout-button {
+  margin-top: auto;
+  color: var(--error) !important;
+  opacity: 0.8;
+}
+
+.logout-button:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  opacity: 1;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+}
+
+/* Home Content */
+.home-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.welcome-section {
+  margin-bottom: 3rem;
+}
+
+.welcome-section h1 {
+  font-size: 2.25rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.welcome-text {
+  font-size: 1.125rem;
+  color: var(--gray-500);
+  line-height: 1.6;
+}
+
+.highlight-company {
+  color: var(--secondary);
+  font-weight: bold;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card h3 {
+  color: var(--gray-500);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-value {
+  color: var(--primary);
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.stat-description {
+  color: var(--gray-400);
+  font-size: 0.875rem;
+}
+
+/* Quick Actions */
+.quick-actions {
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.quick-actions h2 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.action-buttons-grid button {
+  background-color: var(--gray-100);
+  border: none;
+  padding: 1.25rem;
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.action-buttons-grid button:hover {
+  background-color: var(--secondary);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .dashboard-container {
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--bg-dark);
-    color: var(--text-primary);
-    font-family: system-ui, sans-serif;
-  }
-  
-  /* Sidebar */
-  .sidebar {
-    width: 260px;
-    background-color: var(--bg-card);
-    padding: 2rem 1.5rem;
-    border-right: 1px solid var(--border-color);
-    display: flex;
     flex-direction: column;
   }
-  
-  .sidebar h2 {
-    font-size: 1.5rem;
-    color: var(--orange-primary);
-    margin-bottom: 2rem;
-    text-align: center;
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
   }
-  
-  .sidebar button {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    text-align: left;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .sidebar button:hover {
-    background-color: var(--input-bg);
-    color: var(--text-primary);
-  }
-  
-  .sidebar .active {
-    background: linear-gradient(135deg, var(--purple-dark), var(--orange-dark));
-    color: white;
-  }
-  
-  /* Main Content */
+
   .main-content {
-    flex: 1;
-    padding: 2rem;
+    padding: 1.5rem;
   }
-  
-  .main-content h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .main-content p {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
+
+  .welcome-section h1 {
+    font-size: 1.75rem;
   }
-  
-  .highlight-orange {
-    color: var(--orange-primary);
-    font-weight: bold;
-  }
-  
-  .highlight-purple {
-    color: var(--purple-light);
-    font-weight: bold;
-  }
-  
+}

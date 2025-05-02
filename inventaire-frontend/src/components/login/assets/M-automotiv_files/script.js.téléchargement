@@ -1,0 +1,180 @@
+"use strict";
+
+$(function () {
+  // Go to form sectiom
+
+  // Form validation
+
+  var $form = $('.blocform form');
+  var $mymodal = $('#myModalform');
+  var $buttonv = $('.buttoncontact');
+  $.validator.addMethod('custom_email', function (value) {
+    return /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value);
+  }, '');
+  $.validator.addMethod('custom_phone', function (value) {
+    return /^((05)|(06)|(07))[0-9]{8}$/.test(value);
+  }, '');
+
+  if ($form.length) {
+
+    $form.validate({
+      rules: {
+        nom: 'required',
+        prenom: 'required',
+        email: {
+          required: {
+            depends: function depends() {
+              $(this).val($.trim($(this).val()));
+              return true;
+            }
+          },
+          custom_email: true
+        },
+        telephone: {
+          required: {
+            depends: function depends() {
+              $(this).val($.trim($(this).val()));
+              return true;
+            }
+          },
+          custom_phone: true
+        },
+        conditions_utilisation: 'required'
+      },
+      messages: {
+        nom: "Merci d'indiquer votre nom",
+        prenom: "Merci d'indiquer votre pr\xE9nom",
+        email: "Merci d'indiquer votre adresse email",
+        telephone: "Merci d'indiquer votre num\xE9ro de t\xE9l\xE9phone",
+        conditions_utilisation: "Merci d'accepter les conditions g\xE9n\xE9rales d'utilisation"
+      },
+      errorElement: 'p',
+      highlight: function highlight(element) {
+        if ($(element).attr('type') === 'checkbox') $(element).parents('.errorcheck').addClass('error'); else $(element).addClass('error');
+      },
+      unhighlight: function unhighlight(element) {
+        if ($(element).attr('type') === 'checkbox') $(element).parents('.errorcheck').removeClass('error'); else $(element).removeClass('error');
+      },
+
+      submitHandler: function submitHandler(form) {
+        var user = {
+          lastname: form.nom.value,
+          firstname: form.prenom.value,
+          phone: form.telephone.value,
+          email: form.email.value
+        };
+        var date = new Date().toISOString();
+        var source = $('#source').val();
+        var campaign = $('#campaign').val();
+        var utmcontent = $('#utmcontent').val();
+        var model = $('#model').val();
+
+        var datap = new FormData();
+        datap.append("PassKey", 'MFZyaTB4MmxaTGk0L2M5K204ZXZybUtFYi9kaWhuWW1iYUdsRkpXQkN2OD0');
+        datap.append("nom", form.nom.value);
+        datap.append("prenom", form.prenom.value);
+        datap.append("telephone", form.telephone.value);
+        datap.append("email", form.email.value);
+        datap.append("type_demande", 'formlaire de contact de m-automotiv.ma');
+        datap.append("Date_demande", date);
+        datap.append("Nom_compagne", campaign);
+        datap.append("campagne", campaign);
+        datap.append("origin", source);
+        datap.append("content", utmcontent);
+        datap.append("modele", model);
+
+
+
+
+        $.ajax({
+          type: 'POST',
+       //   dataType: 'json',
+          url: 'send.php',
+         // datap: $(form).serialize(),
+         data: datap,
+         processData: false,
+         contentType: false,
+          success: function () {
+           $(".buttoncontact").hide();
+		    console.log("request success");
+			$mymodal.removeClass('hidden');
+            $buttonv.addClass('hidden');
+          },
+          error: function (e) {
+            console.log(e.responseText);
+          }
+        });
+
+        // $.ajax({
+        //   type: 'POST',
+        //   dataType: 'json',
+        //   url: 'send.php',
+        //   data: $(form).serialize(),
+        //   success: function () {
+        //     $mymodal.removeClass('hidden');
+        //     $buttonv.addClass('hidden');
+        //   },
+        //   error: function (e) {
+
+
+        //     //console.log(XMLHttpRequest.responseText);
+        //   }
+        // });
+      }
+
+
+    });
+
+
+    $('.blocform .buttoncontact').on('click', function () {
+      $form.submit();
+    });
+  }
+
+
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownToggle = document.querySelector(".dropdown-toggle");
+    const dropdownMenu = document.querySelector(".dropdown-menu");
+
+    dropdownToggle.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        dropdownMenu.classList.remove("hidden");
+        dropdownMenu.classList.toggle("show");
+    });
+
+    // Optional: Hide dropdown if clicked outside
+    document.addEventListener("click", function(event) {
+        if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.classList.remove("show");
+            dropdownMenu.classList.add("hidden");
+        }
+    });
+    
+    
+    // PoP Up
+    function checkLoadingStatus(){
+      const loading = document.getElementById('loading');
+
+      if(loading.style.display !== 'none'){
+        console.log('still loading ...');
+        setTimeout(checkLoadingStatus, 500);
+      }else{
+        console.log('page is loaded');
+        showPopUp('showing')
+      }
+    }
+    // Start checking the loading status
+    checkLoadingStatus();
+});
+
+// PoP Up
+// function showPopUp(status){
+//     const PopUp = document.getElementById('PopUp');
+//     if(status == 'showing'){
+//       PopUp.classList.add('show');
+//     }else{
+//       PopUp.classList.remove('show');
+//     }  
+// }

@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import "./login.css";
 import logoright from "./assets/logoright.svg"; 
-import Serviceclient2025 from "./assets/Serviceclient2025.webp"; 
+import logoleft from "./assets/logoleft.svg"; 
+
 import logo from "./assets/Logo M-AUTOMOTIV INVENTORY.png"; 
 
 
@@ -70,14 +71,14 @@ function Login() {
   return (
     <div className="login-container">
       <header className="login-header">
-        <img src={logoright} alt="M-AUTOMOTIV" className="header-logo" />
-        <img src={Serviceclient2025} alt="Service Client 2025" className="service-logo" />
+        <img src={logoleft} alt="M-AUTOMOTIV" className="header-logo" />
+        <img src={logoright} alt="Service Client 2025" className="service-logo" />
       </header>
 
       <main className="login-main">
         <div className="login-box">
           <div className="login-logo">
-          <img src={logo} alt="" style={{ width: "200px", height: "auto", marginLeft: "70px" }} />
+          <img src={logo} alt="" style={{ width: "200px", height: "auto", marginLeft: "10px" }} />
             
           </div>
 
