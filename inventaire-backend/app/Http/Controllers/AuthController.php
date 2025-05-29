@@ -14,16 +14,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required',
         ]);
-
-        $user = User::where('email', $request->email)->first();
+        
+        $user = User::where('username', $request->username)->first();
 
         // Vérification si l'utilisateur existe et si le mot de passe est correct
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Les informations d\'identification fournies sont incorrectes.'],
+                'username' => ['Les informations d\'identification fournies sont incorrectes.'],
             ]);
         }
 
@@ -55,7 +55,7 @@ class AuthController extends Controller
             return url('/admin/dashboard'); // Rediriger vers le tableau de bord de l'admin
         }
 
-        if ($user->role === 'responsable') {
+        if ($user->role === 'utilisateur') {
             return url('/responsable/dashboard'); // Rediriger vers le tableau de bord du responsable
         }
 

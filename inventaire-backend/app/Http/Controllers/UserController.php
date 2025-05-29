@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+         $users = User::all();
         return response()->json($users);
     }
 
@@ -23,17 +23,23 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'prenom' => 'nullable|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'required|string|in:Admin,Responsable,Utilisateur',
+            'role' => 'required|string|in:Admin,Utilisateur',
+            'branche' => 'nullable|string|max:255', // ou 'integer' si c’est un id
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'prenom' => $request->prenom,
+            'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'branche' => $request->branche,
         ]);
 
         return response()->json($user, 201);
@@ -44,36 +50,27 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Vérifier si l'utilisateur existe
         $user = User::find($id);
         if (!$user) {
             return response()->json(['message' => 'Utilisateur non trouvé'], 404);
         }
 
-        // Valider les données
         $validatedData = $request->validate([
             'name' => 'sometimes|required|string|max:255',
+            'prenom' => 'sometimes|required|string|max:255',
+            'username' => 'sometimes|required|string|max:255|unique:users,username,' . $id,
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $id,
-            'role' => 'sometimes|required|string|in:Admin,Responsable,Utilisateur',
+            'role' => 'sometimes|required|string|in:Admin,Utilisateur',
+            'branche' => 'sometimes|nullable|string|max:255',
             'password' => 'sometimes|nullable|string|min:6',
         ]);
 
-        // Mettre à jour les champs
-        if (isset($validatedData['name'])) {
-            $user->name = $validatedData['name'];
-        }
-        
-        if (isset($validatedData['email'])) {
-            $user->email = $validatedData['email'];
-        }
-        
-        if (isset($validatedData['role'])) {
-            $user->role = $validatedData['role'];
-        }
-        
-        // Mettre à jour le mot de passe seulement s'il est fourni
-        if (isset($validatedData['password']) && $validatedData['password']) {
-            $user->password = Hash::make($validatedData['password']);
+        foreach ($validatedData as $key => $value) {
+            if ($key === 'password') {
+                $user->password = Hash::make($value);
+            } else {
+                $user->$key = $value;
+            }
         }
 
         $user->save();
@@ -86,7 +83,6 @@ class UserController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        // Vérifier si l'utilisateur essaie de supprimer son propre compte
         if ($request->user()->id == $id) {
             return response()->json(['message' => 'Vous ne pouvez pas supprimer votre propre compte'], 403);
         }

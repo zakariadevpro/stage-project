@@ -1,116 +1,94 @@
 "use client"
 
-import { useState } from "react"
-import "./edit-user-modal.css" // Réutilisation du même CSS
+import { useEffect, useState } from "react"
+import "./edit-user-modal.css"
 
 const API_URL = "http://localhost:8000"
 
 const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
   const [formData, setFormData] = useState({
+    username: "",
     name: "",
+    prenom: "",
     email: "",
     role: "",
     password: "",
+    branche: "",
   })
 
+  const [branches, setBranches] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-  // Ajout d'un état pour les erreurs spécifiques à chaque champ
-  const [fieldErrors, setFieldErrors] = useState({
-    name: null,
-    email: null,
-    role: null,
-    password: null,
-  })
+  const [fieldErrors, setFieldErrors] = useState({})
 
-  // Gérer les changements dans le formulaire
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/branches`)
+        if (!res.ok) throw new Error("Erreur lors du chargement des branches")
+        const data = await res.json()
+        setBranches(data)
+      } catch (err) {
+        console.error("Erreur fetch branches:", err)
+        setError("Impossible de charger les branches")
+      }
+    }
+    fetchBranches()
+  }, [])
+
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }))
-
-    // Effacer l'erreur du champ lorsqu'il est modifié
-    if (fieldErrors[name]) {
-      setFieldErrors((prev) => ({
-        ...prev,
-        [name]: null,
-      }))
-    }
+    setFieldErrors((prev) => ({ ...prev, [name]: null }))
   }
 
-  // Réinitialiser le formulaire
   const resetForm = () => {
     setFormData({
+      username: "",
       name: "",
+      prenom: "",
       email: "",
       role: "",
       password: "",
+      branche: "",
     })
     setError(null)
-    setFieldErrors({
-      name: null,
-      email: null,
-      role: null,
-      password: null,
-    })
+    setFieldErrors({})
   }
 
-  // Soumettre le formulaire
+  const validateForm = () => {
+    const errors = {}
+    if (!formData.username.trim()) errors.username = "Identifiant requis"
+    if (!formData.name.trim()) errors.name = "Nom requis"
+    if (!formData.prenom.trim()) errors.prenom = "Prénom requis"
+    if (!formData.email.trim()) {
+      errors.email = "Email requis"
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Format email invalide"
+    }
+    if (!formData.role) errors.role = "Rôle requis"
+    if (!formData.password.trim()) {
+      errors.password = "Mot de passe requis"
+    } else if (formData.password.length < 6) {
+      errors.password = "Minimum 6 caractères"
+    }
+    if (!formData.branche) errors.branche = "Branche requise"
+    return errors
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    // Validation côté client
-    let hasErrors = false
-    const newFieldErrors = {
-      name: null,
-      email: null,
-      role: null,
-      password: null,
-    }
-
-    if (!formData.name.trim()) {
-      newFieldErrors.name = "Le nom est requis"
-      hasErrors = true
-    }
-
-    if (!formData.email.trim()) {
-      newFieldErrors.email = "L'email est requis"
-      hasErrors = true
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newFieldErrors.email = "Format d'email invalide"
-      hasErrors = true
-    }
-
-    if (!formData.role) {
-      newFieldErrors.role = "Le rôle est requis"
-      hasErrors = true
-    }
-
-    if (!formData.password.trim()) {
-      newFieldErrors.password = "Le mot de passe est requis"
-      hasErrors = true
-    } else if (formData.password.length < 6) {
-      newFieldErrors.password = "Le mot de passe doit contenir au moins 6 caractères"
-      hasErrors = true
-    }
-
-    if (hasErrors) {
-      setFieldErrors(newFieldErrors)
+    const errors = validateForm()
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
       return
     }
 
     try {
       setIsLoading(true)
-      setError(null)
-      setFieldErrors({
-        name: null,
-        email: null,
-        role: null,
-        password: null,
-      })
-
       const response = await fetch(`${API_URL}/api/users`, {
         method: "POST",
         headers: {
@@ -120,87 +98,73 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
         body: JSON.stringify(formData),
       })
 
-      // Récupérer le corps de la réponse, même en cas d'erreur
-      const responseData = await response.json()
-
+      const data = await response.json()
       if (!response.ok) {
-        // Analyser l'erreur renvoyée par l'API
-        if (responseData.error) {
-          // Erreur générale
-          setError(responseData.error || responseData.message || "Erreur lors de l'ajout de l'utilisateur")
-
-          // Erreurs spécifiques aux champs
-          if (responseData.field) {
-            const fieldName = responseData.field
-            setFieldErrors((prev) => ({
-              ...prev,
-              [fieldName]: responseData.error,
-            }))
-          }
-
-          // Cas spécifiques courants
-          if (responseData.error.includes("email") || responseData.error.toLowerCase().includes("duplicate")) {
-            setFieldErrors((prev) => ({
-              ...prev,
-              email: "Cet email est déjà utilisé par un autre utilisateur",
-            }))
-          }
-        } else {
-          setError("Erreur lors de l'ajout de l'utilisateur. Veuillez réessayer.")
+        if (data.error?.includes("email")) {
+          setFieldErrors({ email: "Email déjà utilisé" })
         }
-        throw new Error(responseData.error || "Erreur lors de l'ajout de l'utilisateur")
+        setError(data.error || "Erreur lors de l’ajout.")
+        return
       }
 
-      // Informer le composant parent qu'un utilisateur a été ajouté
       onUserAdded()
-
-      // Réinitialiser le formulaire
       resetForm()
-
-      // Fermer le modal
       onClose()
-    } catch (error) {
-      console.error("Erreur lors de l'ajout de l'utilisateur:", error)
-      // L'erreur générale est déjà définie dans le bloc ci-dessus
+    } catch (err) {
+      console.error("Erreur ajout:", err)
+      setError("Erreur lors de l’ajout de l’utilisateur.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Si le modal n'est pas ouvert, ne rien afficher
   if (!isOpen) return null
 
   return (
-    <div
-      className="modal-overlay"
-      onClick={(e) => {
-        // Fermer le modal si on clique sur l'overlay (en dehors du modal)
-        if (e.target === e.currentTarget) onClose()
-      }}
-    >
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="edit-user-modal">
         <div className="modal-header">
           <h2>Ajouter un utilisateur</h2>
-          <button className="close-button" onClick={onClose}>
-            ×
-          </button>
+          <button className="close-button" onClick={onClose}>×</button>
         </div>
 
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="edit-user-form">
+          <div className={`form-group ${fieldErrors.username ? "has-error" : ""}`}>
+            <label htmlFor="username">Identifiant</label>
+            <input
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+            />
+            {fieldErrors.username && <div className="field-error-message">{fieldErrors.username}</div>}
+          </div>
+
           <div className={`form-group ${fieldErrors.name ? "has-error" : ""}`}>
             <label htmlFor="name">Nom</label>
             <input
-              type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={fieldErrors.name ? "input-error" : ""}
               required
             />
             {fieldErrors.name && <div className="field-error-message">{fieldErrors.name}</div>}
+          </div>
+
+          <div className={`form-group ${fieldErrors.prenom ? "has-error" : ""}`}>
+            <label htmlFor="prenom">Prénom</label>
+            <input
+              id="prenom"
+              name="prenom"
+              value={formData.prenom}
+              onChange={handleChange}
+              required
+            />
+            {fieldErrors.prenom && <div className="field-error-message">{fieldErrors.prenom}</div>}
           </div>
 
           <div className={`form-group ${fieldErrors.email ? "has-error" : ""}`}>
@@ -211,7 +175,6 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={fieldErrors.email ? "input-error" : ""}
               required
             />
             {fieldErrors.email && <div className="field-error-message">{fieldErrors.email}</div>}
@@ -224,15 +187,30 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className={fieldErrors.role ? "input-error" : ""}
               required
             >
               <option value="">Sélectionner un rôle</option>
               <option value="Admin">Admin</option>
-              <option value="Responsable">Responsable</option>
-             
+              <option value="Utilisateur">Utilisateur</option>
             </select>
             {fieldErrors.role && <div className="field-error-message">{fieldErrors.role}</div>}
+          </div>
+
+          <div className={`form-group ${fieldErrors.branche ? "has-error" : ""}`}>
+            <label htmlFor="branche">Branche</label>
+            <select
+              id="branche"
+              name="branche"
+              value={formData.branche}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Sélectionner une branche</option>
+              {branches.map((b) => (
+                <option key={b.id} value={b.name}>{b.name}</option>
+              ))}
+            </select>
+            {fieldErrors.branche && <div className="field-error-message">{fieldErrors.branche}</div>}
           </div>
 
           <div className={`form-group ${fieldErrors.password ? "has-error" : ""}`}>
@@ -243,8 +221,6 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Mot de passe"
-              className={fieldErrors.password ? "input-error" : ""}
               required
             />
             {fieldErrors.password && <div className="field-error-message">{fieldErrors.password}</div>}
@@ -255,7 +231,7 @@ const AddUserModal = ({ isOpen, onClose, onUserAdded }) => {
           <button type="button" className="cancel-button" onClick={onClose}>
             Annuler
           </button>
-          <button type="button" className="submit-button" disabled={isLoading} onClick={handleSubmit}>
+          <button type="button" className="submit-button" onClick={handleSubmit} disabled={isLoading}>
             {isLoading ? "Ajout en cours..." : "Ajouter"}
           </button>
         </div>

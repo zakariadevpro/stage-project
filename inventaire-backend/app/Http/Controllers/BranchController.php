@@ -11,13 +11,19 @@ class BranchController extends Controller
     public function index()
     {
         $branches = Branch::all()->map(function ($branch) {
-            $branch->image_path = asset($branch->image_path); // Ajoute l'URL complète
+            // Vérifier si image_path est non nul et non vide
+            if ($branch->image_path) {
+                $branch->image_path = asset($branch->image_path);
+            } else {
+                $branch->image_path = null; // ou une URL par défaut si tu veux
+            }
             return $branch;
         });
 
         return response()->json($branches);
     }
-    
+
+
     public function store(Request $request)
 {
     $request->validate([

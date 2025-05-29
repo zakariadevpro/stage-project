@@ -101,6 +101,9 @@
     background: linear-gradient(to right, var(--orange-dark), var(--orange-primary));
     color: white;
   }
+  .edit-user-form p{
+    color: white;
+  }
   
   .confirm-button:hover {
     opacity: 0.9;

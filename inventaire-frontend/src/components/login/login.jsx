@@ -5,27 +5,22 @@ import axios from "axios";
 import "./login.css";
 import logoright from "./assets/logoright.svg"; 
 import logoleft from "./assets/logoleft.svg"; 
-
 import logo from "./assets/Logo M-AUTOMOTIV INVENTORY.png"; 
-
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ username: "", password: "" });
 
   const validateForm = () => {
     let valid = true;
-    const newErrors = { email: "", password: "" };
+    const newErrors = { username: "", password: "" };
 
-    if (!email) {
-      newErrors.email = "Email requis";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email invalide";
+    if (!username) {
+      newErrors.username = "Nom d'utilisateur requis";
       valid = false;
     }
 
@@ -45,7 +40,10 @@ function Login() {
 
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/api/login", { email, password });
+      const response = await axios.post("http://localhost:8000/api/login", {
+        username,
+        password,
+      });
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -55,6 +53,7 @@ function Login() {
         payload: response.data,
       });
 
+      // 🔍 Vérifie le rôle et redirige
       if (response.data.user.role === "admin") {
         navigate("/admin/Dashboard");
       } else {
@@ -78,23 +77,24 @@ function Login() {
       <main className="login-main">
         <div className="login-box">
           <div className="login-logo">
-          <img src={logo} alt="" style={{ width: "200px", height: "auto", marginLeft: "10px" }} />
-            
+            <img src={logo} alt="logo" style={{ width: "200px", height: "auto", marginLeft: "10px" }} />
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
               <div className="input-container">
                 <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-                  className={errors.email ? "input-error" : ""}
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Identifiant"
+                  className={errors.username ? "input-error" : ""}
+                  autoComplete="username"
                 />
               </div>
-              {errors.email && <div className="error-message">{errors.email}</div>}
+              {errors.username && <div className="error-message">{errors.username}</div>}
             </div>
 
             <div className="form-group">
@@ -102,10 +102,12 @@ function Login() {
                 <input
                   type="password"
                   id="password"
+                  name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Mot de passe"
                   className={errors.password ? "input-error" : ""}
+                  autoComplete="current-password"
                 />
               </div>
               {errors.password && <div className="error-message">{errors.password}</div>}
@@ -116,21 +118,16 @@ function Login() {
             </button>
 
             <div className="help-text">
-              <a href="/contacter-admin">Besoin d'aide? Contactez l'administrateur</a>
+              <a href="/contacter-admin">Besoin d'aide ? Contactez l'administrateur</a>
             </div>
           </form>
         </div>
       </main>
 
       <footer className="login-footer">
-        <div className="social-links">
-          <a href="https://web.facebook.com/M.Automotiv" target="_blank" rel="noopener noreferrer" className="social-link facebook"></a>
-          <a href="https://www.linkedin.com/company/m-automotiv" target="_blank" rel="noopener noreferrer" className="social-link linkedin"></a>
-          <a href="https://www.youtube.com/@mautomotiv" target="_blank" rel="noopener noreferrer" className="social-link youtube"></a>
-          <a href="https://www.instagram.com/m.automotiv.maroc" target="_blank" rel="noopener noreferrer" className="social-link instagram"></a>
-        </div>
+
         <p className="copyright">© {new Date().getFullYear()} M.automotive. Tous droits réservés.</p>
-        <img src="https://m-automotiv.ma/assets/img/packimg/logoleft.svg" alt="M-AUTOMOTIV" className="footer-logo" />
+
       </footer>
     </div>
   );

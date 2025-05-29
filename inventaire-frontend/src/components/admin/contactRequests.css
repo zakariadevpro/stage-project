@@ -38,6 +38,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
+  margin: 0;
 }
 
 .contact-requests-table th {

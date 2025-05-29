@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Branch;
 
 class User extends Authenticatable
 {
@@ -19,8 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'prenom',
+        'username',
         'email',
         'password',
+        'role',
+        'branche'
     ];
 
     /**
@@ -42,4 +46,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Override the default identifier for authentication (email -> username).
+     */// app/Models/User.php
+
+    public function brancheRelation()
+    {
+        return $this->belongsTo(Branch::class, 'branche', 'name');
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
 }

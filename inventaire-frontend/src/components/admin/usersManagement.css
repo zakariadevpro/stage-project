@@ -87,7 +87,7 @@
 
 /* Table */
 .table-container {
-  margin-top: 1rem;
+  margin-top: 0;
   border: 1px solid var(--gray-200);
   border-radius: 4px;
   overflow-x: auto;
@@ -97,6 +97,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
+  margin: 0;
 }
 
 .users-table th {
