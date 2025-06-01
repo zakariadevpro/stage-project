@@ -1,6 +1,6 @@
 // Imports
 import React, { useEffect, useState } from "react";
-import { Edit, Trash2, Plus, Printer, Save, X, Package, Layers, Droplet, Search, Building2, } from "lucide-react";
+import { Edit, Trash2, Plus, Printer, Save, X, Package, Layers, Droplet, Search, Building2,User, FileText} from "lucide-react";
 import { useParams } from "react-router-dom";
 import "./InventaireConsommable.css"; // Assurez-vous d'importer le CSS
 
@@ -53,6 +53,8 @@ const ConsommablesEnCommande = () => {
     quantite_drum: 0,
     etat: "disponible",
     branche: "",
+    nom_demandeur: "",
+  description_detaillee: "",
 
 
   };
@@ -230,107 +232,147 @@ const ConsommablesEnCommande = () => {
     }
   };
 
-  const handleEdit = (item) => {
-    // Déterminer le type de toner basé sur les valeurs -1
-    const tonerType = getTonerTypeFromData(item);
+const handleEdit = (item) => {
+  // Déterminer le type de toner basé sur les valeurs -1
+  const tonerType = getTonerTypeFromData(item);
 
-    setForm({
-      marque: item.marque,
-      reference: item.reference,
-      type_toner: tonerType,
-      quantite_toner_noir: item.quantite_toner_noir === -1 ? 0 : item.quantite_toner_noir,
-      quantite_toner_cyan: item.quantite_toner_cyan === -1 ? 0 : item.quantite_toner_cyan,
-      quantite_toner_magenta: item.quantite_toner_magenta === -1 ? 0 : item.quantite_toner_magenta,
-      quantite_toner_jaune: item.quantite_toner_jaune === -1 ? 0 : item.quantite_toner_jaune,
-      quantite_toner_noir_couleur: item.quantite_toner_noir_couleur === -1 ? 0 : item.quantite_toner_noir_couleur,
-      quantite_drum: item.quantite_drum === -1 ? 0 : (item.quantite_drum || 0),
-      etat: item.etat,
-      branche: item.branche || "", // pour remplir le select branche
-    });
-    setMarqueSelectionnee(item.marque);
-    setTypeToner(tonerType);
-    setEditingId(item.id);
-    setHasDrum(item.quantite_drum !== -1 && item.quantite_drum !== null && item.quantite_drum !== undefined);
-    setShowModal(true);
-  };
+  // Extraire nom et description depuis le champ description
+  let nomDemandeur = "";
+  let descriptionDetaillee = "";
+  
+  if (item.description) {
+    const match = item.description.match(/^([^:]+):\s*(.*)$/);
+    if (match) {
+      nomDemandeur = match[1].trim();
+      descriptionDetaillee = match[2].trim();
+    } else {
+      descriptionDetaillee = item.description;
+    }
+  }
+
+  setForm({
+    marque: item.marque,
+    reference: item.reference,
+    type_toner: tonerType,
+    quantite_toner_noir: item.quantite_toner_noir === -1 ? 0 : item.quantite_toner_noir,
+    quantite_toner_cyan: item.quantite_toner_cyan === -1 ? 0 : item.quantite_toner_cyan,
+    quantite_toner_magenta: item.quantite_toner_magenta === -1 ? 0 : item.quantite_toner_magenta,
+    quantite_toner_jaune: item.quantite_toner_jaune === -1 ? 0 : item.quantite_toner_jaune,
+    quantite_toner_noir_couleur: item.quantite_toner_noir_couleur === -1 ? 0 : item.quantite_toner_noir_couleur,
+    quantite_drum: item.quantite_drum === -1 ? 0 : (item.quantite_drum || 0),
+    etat: item.etat,
+    branche: item.branche || "",
+    // AJOUTER ces lignes
+    nom_demandeur: nomDemandeur,
+    description_detaillee: descriptionDetaillee,
+  });
+  
+  setMarqueSelectionnee(item.marque);
+  setTypeToner(tonerType);
+  setEditingId(item.id);
+  setHasDrum(item.quantite_drum !== -1 && item.quantite_drum !== null && item.quantite_drum !== undefined);
+  setShowModal(true);
+};
 
 
 // 1. MODIFIER la fonction handleSubmit pour gérer les valeurs -1
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Validation basique
-    if (!form.marque || !form.reference) {
-      alert("Marque et référence sont obligatoires");
-      return;
-    }
+  // Validation basique
+  if (!form.marque || !form.reference) {
+    alert("Marque et référence sont obligatoires");
+    return;
+  }
 
-    const token = localStorage.getItem("token");
-    const formData = { ...form };
-    formData.type_toner = typeToner;
+  // AJOUTER cette validation
+  if (!form.nom_demandeur.trim()) {
+    alert("Le nom du demandeur est obligatoire");
+    return;
+  }
 
-    // NOUVELLE LOGIQUE : Assigner -1 aux champs non utilisés
-    if (typeToner === "unicolor") {
-      // Pour unicolor : les couleurs prennent -1
-      formData.quantite_toner_cyan = -1;
-      formData.quantite_toner_magenta = -1;
-      formData.quantite_toner_jaune = -1;
-      formData.quantite_toner_noir_couleur = -1;
-      // quantite_toner_noir garde sa valeur
-    } else {
-      // Pour multicolor : le toner noir unicolor prend -1
-      formData.quantite_toner_noir = -1;
-      // Les couleurs gardent leurs valeurs
-    }
+  const token = localStorage.getItem("token");
+  const formData = { ...form };
+  formData.type_toner = typeToner;
 
-    // Gestion du drum : si pas coché, mettre -1 au lieu de null
-    if (!hasDrum) {
-      formData.quantite_drum = -1;
-    } else {
-      // S'assurer que la quantité drum est bien définie
-      formData.quantite_drum = form.quantite_drum || 0;
-    }
+  // NOUVELLE LOGIQUE : Assigner -1 aux champs non utilisés
+  if (typeToner === "unicolor") {
+    formData.quantite_toner_cyan = -1;
+    formData.quantite_toner_magenta = -1;
+    formData.quantite_toner_jaune = -1;
+    formData.quantite_toner_noir_couleur = -1;
+  } else {
+    formData.quantite_toner_noir = -1;
+  }
 
-    const payload = { ...formData, etat: "endemande" };
+  if (!hasDrum) {
+    formData.quantite_drum = -1;
+  } else {
+    formData.quantite_drum = form.quantite_drum || 0;
+  }
 
-    const url = editingId
-        ? `${API_URL}/consommables/${editingId}`
-        : `${API_URL}/consommables`;
-    const method = editingId ? "PUT" : "POST";
-
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
-
-      resetForm();
-      setShowModal(false);
-      fetchConsommables();
-      fetchMarquesReferences();
-
-      // Notification de succès
-      const successMessage = document.createElement("div");
-      successMessage.className = "notification success";
-      successMessage.textContent = editingId ? "Consommable modifié avec succès" : "Consommable ajouté avec succès";
-      document.body.appendChild(successMessage);
-
-      setTimeout(() => {
-        document.body.removeChild(successMessage);
-      }, 3000);
-
-    } catch (err) {
-      console.error("Erreur:", err);
-      alert("Erreur : " + err.message);
-    }
+  // AJOUTER : Construire la description finale
+  const descriptionFinale = `${form.nom_demandeur.trim()}: ${form.description_detaillee.trim()}`;
+  
+  const payload = { 
+    ...formData, 
+    etat: "endemande",
+    description: descriptionFinale // Remplacer description par la version formatée
   };
+
+  // Supprimer les champs temporaires du payload
+  delete payload.nom_demandeur;
+  delete payload.description_detaillee;
+
+  const url = editingId
+    ? `${API_URL}/consommables/${editingId}`
+    : `${API_URL}/consommables`;
+  const method = editingId ? "PUT" : "POST";
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error("Erreur lors de l'enregistrement");
+
+    resetForm();
+    setShowModal(false);
+    fetchConsommables();
+    fetchMarquesReferences();
+
+    const successMessage = document.createElement("div");
+    successMessage.className = "notification success";
+    successMessage.textContent = editingId ? "Consommable modifié avec succès" : "Consommable ajouté avec succès";
+    document.body.appendChild(successMessage);
+
+    setTimeout(() => {
+      document.body.removeChild(successMessage);
+    }, 3000);
+
+  } catch (err) {
+    console.error("Erreur:", err);
+    alert("Erreur : " + err.message);
+  }
+};
+const parseDescription = (description) => {
+  if (!description) return { nom: "", description: "" };
+  
+  const match = description.match(/^([^:]+):\s*(.*)$/);
+  if (match) {
+    return {
+      nom: match[1].trim(),
+      description: match[2].trim()
+    };
+  }
+  return { nom: "", description: description };
+};
 
   const handleDelete = async (id) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce consommable ?")) return;
@@ -657,6 +699,37 @@ const ConsommablesEnCommande = () => {
                           </div>
                       )}
                     </div>
+                    <div className="form-section">
+  <h4 className="section-title">
+    <Package size={18} /> Informations de la demande
+  </h4>
+
+  <div className="form-group">
+    <label className="form-label">Nom du demandeur :</label>
+    <input
+      type="text"
+      name="nom_demandeur"
+      value={form.nom_demandeur}
+      onChange={handleChange}
+      className="form-input"
+      placeholder="Nom et prénom du demandeur"
+      required
+    />
+  </div>
+
+  <div className="form-group">
+    <label className="form-label">Description :</label>
+    <textarea
+      name="description_detaillee"
+      value={form.description_detaillee}
+      onChange={handleChange}
+      className="form-input"
+      placeholder="Décrivez le motif de la demande (ex: imprimante en panne, stock épuisé, etc.)"
+      rows="3"
+      style={{ resize: 'vertical', minHeight: '80px' }}
+    />
+  </div>
+</div>
 
                     <div className="form-section">
                       <h4 className="section-title">
@@ -899,6 +972,7 @@ const ConsommablesEnCommande = () => {
                           <div className="inventory-item">
                             < Building2 size={18} />succursale : <span className="item-label">{item.branche}</span>
                           </div>
+                         
                           {item.quantite_drum !== -1 && (
                               <div className="inventory-item">
                                 <Layers size={16} /> <span className="item-label">Drum :</span> {item.quantite_drum || 0}
@@ -925,6 +999,28 @@ const ConsommablesEnCommande = () => {
                               </div>
 
                           )}
+                           {item.description && (
+  <div className="request-info">
+    {(() => {
+      const { nom, description } = parseDescription(item.description);
+      return (
+        <>
+          {nom && (
+            <div className="inventory-item">
+              <User size={16} /> <span className="item-label">Demandeur :</span> {nom}
+            </div>
+          )}
+          {description && (<>
+            <div className="inventory-item">
+              <FileText size={16} /> <span className="item-label">Description :</span> 
+              
+            </div><div className="inventory-item description-item"><span className="description-text">{description}</span></div></>
+          )}
+        </>
+      );
+    })()}
+  </div>
+)}
                           <div className="card-footer">
                             <button
                                 className="btn-arrived-full"

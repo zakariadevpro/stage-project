@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasswordRequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use \App\Http\Controllers\DashboardUserControlle;
 use Illuminate\Http\Request;
 // routes/api.php
 
@@ -23,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/consommables/{id}', [ConsommableImprimanteController::class, 'update']); // mise à jour
     Route::delete('/consommables/{id}', [ConsommableImprimanteController::class, 'destroy']); // suppression
 });
+
+
 
 
 // Routes publiques (pas besoin d'authentification)
@@ -58,7 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/pcs-by-branche/{name}', [PcController::class, 'getPcsByBranche']);
     Route::post('/pcs', [PcController::class, 'store']);
     Route::put('/pcs/{id}', [PcController::class, 'update']);
-    Route::delete('/pcs/{id}', [PcController::class, 'destroy']);
+    Route::delete('/pcs/{id}r', [PcController::class, 'destroy']);
 
     // Gestion des nouveaux PC
 
@@ -83,3 +86,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/printers/{id}', [ImprimanteController::class, 'update']);
     Route::delete('/printers/{id}', [ImprimanteController::class, 'destroy']);
     Route::post('/printers/import', [ImprimanteController::class, 'import']);
+    Route::middleware('auth:sanctum')->get('/user/stats', [DashboardUserControlle::class, 'getStats']);

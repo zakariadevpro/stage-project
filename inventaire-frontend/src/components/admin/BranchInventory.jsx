@@ -673,7 +673,7 @@ const BranchInventory = () => {
       </div>
       <footer className="login-footer">
 
-        <p className="copyright">© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
+        <p className="copyright" style={{color :'white'}}>© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
 
       </footer>
     </>

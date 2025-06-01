@@ -259,7 +259,7 @@ const PcCommandes = () => {
 
       <footer className="login-footer">
         <div className="social-links" />
-        <p>© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
+        <p style={{color :'white'}}>© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
         
       </footer>
     </>

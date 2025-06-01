@@ -3,20 +3,22 @@ import React, { useEffect, useState } from "react";
 import { Edit, Trash2, Plus, Printer, Save, X, Package, Layers, Droplet, Search,Droplets } from "lucide-react";
 import { useParams } from "react-router-dom";
 import "./InventaireConsommable.css"; // Assurez-vous d'importer le CSS
-
+import logoright from "./assets/logoright.svg"; 
+import logoleft from "./assets/logoleft.svg"; 
+import { useNavigate } from 'react-router-dom';
 // Couleurs toners
 const couleurs = [
   { nom: "Cyan", nomChamp: "quantite_toner_cyan", couleur: "#06b6d4", icon: <Droplet size={16} color="#06b6d4" /> },
   { nom: "Magenta", nomChamp: "quantite_toner_magenta", couleur: "#d946ef", icon: <Droplet size={16} color="#d946ef" /> },
   { nom: "Jaune", nomChamp: "quantite_toner_jaune", couleur: "#facc15", icon: <Droplet size={16} color="#facc15" /> },
-  { nom: "Noir (couleur)", nomChamp: "quantite_toner_noir_couleur", couleur: "#000", icon: <Droplet size={16} color="#000" /> },
+  { nom: "Noir ", nomChamp: "quantite_toner_noir_couleur", couleur: "#000", icon: <Droplet size={16} color="#000" /> },
 ];
 
 const tonerTypes = {
   unicolor: "Toner Noir",
   multicolor: "Toner Couleur (CMYK)"
 };
-
+  
 const API_URL = "http://localhost:8000/api";
 
 const InventaireConsommable = () => {
@@ -52,6 +54,7 @@ const InventaireConsommable = () => {
     etat: "disponible",
 
   };
+  const navigate = useNavigate();
 
   const [form, setForm] = useState(initialFormState);
 
@@ -97,6 +100,7 @@ const InventaireConsommable = () => {
       console.error("Erreur de chargement des marques et références:", error);
     }
   };
+    const handleLogoClick = () => navigate('/admin/Dashboard');
 
   const fetchConsommables = async () => {
     setLoading(true);
@@ -372,7 +376,11 @@ const InventaireConsommable = () => {
     return getTonerTypeFromData(item);
   };
 
-  return (
+  return (<>
+  <header className="login-header" style={{ marginBottom: '2rem' }}>
+          <img src={logoleft} alt="M-AUTOMOTIV" className="header-logo" onClick={handleLogoClick} />
+          <img src={logoright} alt="Service Client 2025" className="service-logo" />
+        </header>
       <div className="inventaire-consommable">
         <header className="page-header">
           <h2 className="page-title">
@@ -836,7 +844,7 @@ const InventaireConsommable = () => {
               </div>
           )}
         </div>
-      </div>
+      </div></>
   );
 };
 

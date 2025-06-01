@@ -126,7 +126,7 @@ function Login() {
 
       <footer className="login-footer">
 
-        <p className="copyright">© {new Date().getFullYear()} M.automotive. Tous droits réservés.</p>
+        <p className="copyright">© {new Date().getFullYear()} M.automotive. Tous droits réservés.<span> realiser par zakariadevpro@gmail.com ;)</span></p>
 
       </footer>
     </div>

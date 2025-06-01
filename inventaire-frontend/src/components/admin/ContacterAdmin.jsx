@@ -146,7 +146,7 @@ const ContacterAdmin = () => {
 
       <footer className="login-footer">
 
-        <p className="copyright">© {new Date().getFullYear()} M.automotive. Tous droits réservés.</p>
+        <p className="copyright"style={{color :'white'}}>© {new Date().getFullYear()} M.automotive. Tous droits réservés.</p>
 
       </footer>
     </div>

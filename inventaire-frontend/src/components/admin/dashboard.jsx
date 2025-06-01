@@ -230,10 +230,10 @@ const Dashboard = () => {
               {[
                 { id: "home", icon: <Home size={18} />, label: "Accueil" },
                 { id: "users", icon: <Users size={18} />, label: "Utilisateurs" },
-                { id: "inventory", icon: <Computer size={18} />, label: "Inventaire PC" },
+                { id: "inventory", icon: <Computer size={18} />, label: "Inventaire PCs" },
                 { id: "new", icon: <ShoppingCart size={18} />, label: "Arrivages PC" },
-                { id: "imprimente", icon: <Printer size={18} />, label: "Imprimantes" },
-                { id: "consomableimprimente", icon: <Droplets size={18} />, label: "consomable" },
+                { id: "imprimente", icon: <Printer size={18} />, label: "Inventaire Imprimantes" },
+                { id: "consomableimprimente", icon: <Droplets size={18} />, label: "consomables" },
                 { id: "contact", icon: <MessageSquare size={18} />, label: "Messages reçus",
                   badge: stats.messages > 0 ? stats.messages : null }
               ].map(item => (
@@ -659,7 +659,7 @@ const Dashboard = () => {
 
 
 
-          <p className="copyright">© {new Date().getFullYear()} M.automotiv. Tous droits réservés.<span> realiser par zakariadevpro@gmail.com ;)</span></p>
+          <p className="copyright"style={{color: 'white'}}>© {new Date().getFullYear()} M.automotiv. Tous droits réservés.<span> realiser par zakariadevpro@gmail.com ;)</span></p>
         </footer>
       </>
   );

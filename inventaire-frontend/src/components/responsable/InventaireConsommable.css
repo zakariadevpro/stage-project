@@ -2,9 +2,12 @@
 
 /* Variables pour une cohérence visuelle */
 :root {
-    --primary: #4f46e5;
-    --primary-light: #6366f1;
-    --primary-lighter: rgba(99, 102, 241, 0.1);
+   --primary: #2c2051;
+  --primary-light: #3a2b67;
+  --primary-dark: #221940;
+  --secondary: #ff5c35;
+  --secondary-light: #ff7d5d;
+  --secondary-dark: #e54825;
     --success: #10b981;
     --success-dark: #059669;
     --danger: #ef4444;
@@ -50,10 +53,6 @@ body {
     color: var(--gray-800);
     background-color: #f8fafc;
     line-height: 1.5;
-}
-.nouveau-pc-header {
-  margin-bottom: 2rem;
-  
 }
 
 /* Container principal avec fond subtil */

@@ -352,14 +352,9 @@ const BranchInventory = () => {
         )}
       </div>
       <footer className="login-footer">
-      <div className="social-links">
-        <a href="https://web.facebook.com/M.Automotiv" target="_blank" rel="noopener noreferrer" className="social-link facebook"></a>
-        <a href="https://www.linkedin.com/company/m-automotiv" target="_blank" rel="noopener noreferrer" className="social-link linkedin"></a>
-        <a href="https://www.youtube.com/@mautomotiv" target="_blank" rel="noopener noreferrer" className="social-link youtube"></a>
-        <a href="https://www.instagram.com/m.automotiv.maroc" target="_blank" rel="noopener noreferrer" className="social-link instagram"></a>
-      </div>
-      <p className="copyright">© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
-      <img src="https://m-automotiv.ma/assets/img/packimg/logoleft.svg" alt="M-AUTOMOTIV" className="footer-logo" />
+      
+      <p className="copyright"style={{color: 'white'}}>© {new Date().getFullYear()} M.automotiv. Tous droits réservés.</p>
+      
     </footer>
     </>
   );

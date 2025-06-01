@@ -12,7 +12,7 @@ import PcCommandes from "./components/admin/pcCommendes";
 import NouveauPcDispo from "./components/admin/nouveauPcDispo";
 import BranchInventoryPrinterUser from './components/responsable/BranchInventoryPrinterUser';
 import InventaireConsommable from "./components/admin/InventaireConsomable";
-
+import InventaireConsommableUser from './components/responsable/InventaireConsommableUser';
 import ConsommablesEnCommande from "./components/admin/ConsommablesEnCommande";
 
 
@@ -89,6 +89,10 @@ function App() {
             } 
             
           />
+          <Route 
+  path="/user/branch/:branchName/consommables" 
+  element={<InventaireConsommableUser />} 
+/>
           <Route 
            path="/responsable/branch/:name" 
             element={
